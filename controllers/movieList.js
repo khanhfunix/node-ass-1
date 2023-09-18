@@ -1,7 +1,9 @@
+// controller quan ly movielist
 const Movies = require("../models/Movies");
 
 const paging = require("../util/paging");
 
+// render list sort by trending
 exports.getTrending = (req, res, next) => {
   Movies.showTrendingList((movie) => {
     const pageNumber = req.query.page;
@@ -16,6 +18,7 @@ exports.getTrending = (req, res, next) => {
   });
 };
 
+// render list sort by rating
 exports.getRating = (req, res, next) => {
   Movies.showRatingList((movie) => {
     const pageNumber = req.query.page;
@@ -30,6 +33,7 @@ exports.getRating = (req, res, next) => {
   });
 };
 
+// render list theo Genre
 exports.getGenre = (req, res, next) => {
   const genreId = +req.query.genre;
   const pageNUmber = +req.query.page;
@@ -52,7 +56,7 @@ exports.getGenre = (req, res, next) => {
       }
       const totalPage = Math.ceil(movieListRenderByGenre.length / 20);
       paging.sendDataPerPage(pageNUmber, movieListRenderByGenre);
-      console.log(movieListRenderByGenre.length);
+
       res.status(200).send({
         results: movieListRenderByGenre,
         page: pageNUmber || 1,
@@ -64,16 +68,16 @@ exports.getGenre = (req, res, next) => {
   });
 };
 
+// render list thong tin video
 exports.getMovieTrailer = (req, res, next) => {
   const movieId = +req.query.movieId;
-  console.log(movieId);
+
   if (!movieId) {
     return res
       .status(400)
       .send({ message: "Not found id parram", statusCode: 400 });
   }
   Movies.searchVideoId((videoInfo) => {
-    console.log(videoInfo[0]);
     const video = videoInfo.find((vid) => vid.id === movieId);
     console.log(video);
 
@@ -106,20 +110,20 @@ exports.getMovieTrailer = (req, res, next) => {
   });
 };
 
+// render search list
 exports.getSearch = (req, res, next) => {
   const movieRender = [];
 
-  const searchKey = req.params.searchKey;
+  const searchKey = req.query.search;
   if (!searchKey) {
     return res
       .status(400)
       .send({ message: "Not found param", statusCode: 400 });
   }
-  const searchKeyLowerCase = req.params.searchKey.toLowerCase();
+  const searchKeyLowerCase = req.query.search.toLowerCase();
 
   Movies.showMovieList((movie) => {
     for (mov of movie) {
-      // console.log(mov.original_title === undefined);
       if (mov.original_title === undefined) {
         if (
           mov.original_name

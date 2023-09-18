@@ -1,25 +1,31 @@
+// handle data
+
 const fs = require("fs");
 
 const path = require("path");
 
+// path toi file movie
 const pathToMovieList = path.join(
   path.dirname(process.mainModule.filename),
   "data",
   "movieList.json"
 );
 
+// path toi file Genre
 const pathToGenreList = path.join(
   path.dirname(process.mainModule.filename),
   "data",
   "genreList.json"
 );
 
+// path toi file Video
 const pathToVideoList = path.join(
   path.dirname(process.mainModule.filename),
   "data",
   "videoList.json"
 );
 
+// ham lay file content
 const getMovieFromFile = (cb) => {
   fs.readFile(pathToMovieList, (err, fileContent) => {
     if (err) {
@@ -48,7 +54,9 @@ const getVideoFromFile = (cb) => {
   });
 };
 
+// dung class de quan ly cac chuc nang
 module.exports = class Movie {
+  // xu ly logic sap xep movie theo trending
   static showTrendingList(cb) {
     getMovieFromFile((mov) => {
       mov.sort((a, b) => a.popularity - b.popularity);
@@ -56,7 +64,7 @@ module.exports = class Movie {
       cb(mov);
     });
   }
-
+  // xu ly logic sap xep movie theo Rating
   static showRatingList(cb) {
     getMovieFromFile((mov) => {
       mov.sort((a, b) => a.vote_average - b.vote_average);
@@ -64,23 +72,25 @@ module.exports = class Movie {
       cb(mov);
     });
   }
-
-  static searchGenreId(cb) {
-    getGenreFromFile((mov) => {
-      cb(mov);
-    });
-  }
-
+  // lay ra movie
   static showMovieList(cb) {
     getMovieFromFile((mov) => {
       cb(mov);
     });
   }
+  // xu ly logic lay ra genreID
+  static searchGenreId(cb) {
+    getGenreFromFile((mov) => {
+      cb(mov);
+    });
+  }
+  // tim videoID
   static searchVideoId(cb) {
     getVideoFromFile((mov) => {
       cb(mov);
     });
   }
+  // lay genre + sort theo ngay publish
   static showGenreList(cb) {
     getMovieFromFile((mov) => {
       // sort theo publish at
